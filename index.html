@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terminal Emulator</title>
+    <style>
+        #output {
+            white-space: pre-wrap;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <pre id="output"></pre>
+        <input type="text" id="input" placeholder="C:\\Terminal>>>" onkeydown="handleKeyDown(event)">
+    </div>
+
+    <script>
+        let outputElement = document.getElementById('output');
+        let inputElement = document.getElementById('input');
+        let variables = ["Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display", "Error: variable is unset, cannot display"];
+
+        let run = true;
+        let passwordCorrect = false;
+        const password = "gr33nb00k";
+
+        function printOutput(text) {
+            outputElement.textContent += text + '\n';
+        }
+
+        function clearInput() {
+            inputElement.value = '';
+        }
+
+        function handleKeyDown(event) {
+            if (event.key === 'Enter') {
+                event.preventDefault();
+                handleCommand(inputElement.value);
+                clearInput();
+            }
+        }
+
+        function handleCommand(cmdIn) {
+            printOutput("C:\\Terminal>>>" + cmdIn);
+
+            if (cmdIn === "end") {
+                run = false;
+            } else if (cmdIn === "holiday") {
+                handleHoliday();
+            } else if (cmdIn === "repeatMultilineString") {
+                handleRepeatMultilineString();
+            } else if (cmdIn === "varSet") {
+                handleVarSet();
+            } else if (cmdIn === "varDisplay") {
+                handleVarDisplay();
+            } else if (cmdIn === "repeatString") {
+                handleRepeatString();
+            } else if (cmdIn === "fakeExecute") {
+                fakeExecute();
+            } else if (cmdIn === "fakeInstall") {
+                fakeInstall();
+            } else if (cmdIn === "fakeHack") {
+                fakeHack();
+            } else if (cmdIn.trim() === "") {
+                printOutput("Cannot accept whitespace as a command");
+            } else {
+                printOutput("No such command: " + cmdIn);
+            }
+
+            if (run) {
+                printOutput(""); // Add an empty line for the next input
+            }
+        }
+
+        function handleHoliday() {
+            printOutput("No holiday functionality implemented yet.");
+        }
+
+        function handleRepeatMultilineString() {
+            let lines = [];
+            let currentLine = 0;
+            let ask = true;
+
+            while (ask) {
+                const newLine = prompt("Line " + (currentLine + 1) + " value (type 'end' to finish line setup): ");
+                if (newLine.toLowerCase() === "end") {
+                    ask = false;
+                } else {
+                    lines.push(newLine);
+                    currentLine++;
+                }
+            }
+
+            const times = prompt("Input repetition times: ");
+            const interval = prompt("Input interval (in seconds) between each line (0 for quickest repetition): ");
+            const intervalRepeat = prompt("Input interval (in seconds) between each repetition (0 for quickest repetition): ");
+            const doNumberStr = prompt("Do number between repetitions? (y/n): ");
+            const doNumber = doNumberStr.toLowerCase() === "y";
+
+            let i = 1;
+
+            while (i <= parseFloat(times)) {
+                if (doNumber) {
+                    printOutput(i + ":");
+                }
+
+                let j = 0;
+
+                while (j < currentLine) {
+                    printOutput(lines[j]);
+                    j++;
+                    sleep(parseFloat(interval));
+                }
+
+                sleep(parseFloat(intervalRepeat));
+                i++;
+            }
+        }
+
+        function handleVarSet() {
+            const varname = prompt("Variable number: ");
+            if (parseFloat(varname) <= 20) {
+                const newvalue = prompt("New Value:");
+                variables[parseInt(parseFloat(varname))] = newvalue;
+            } else {
+                printOutput("Invalid Variable Number");
+            }
+        }
+
+        function handleVarDisplay() {
+            const varname = prompt("Variable number: ");
+            if (parseFloat(varname) <= 20) {
+                printOutput(variables[parseInt(parseFloat(varname))]);
+            } else {
+                printOutput("Invalid Variable Number");
+            }
+        }
+
+        function handleRepeatString() {
+            const string = prompt("Input string to repeat: ");
+            const times = prompt("Input repetition times: ");
+            const interval = prompt("Input interval (in seconds) between each repetition (0 for quickest repetition): ");
+            const doNumberStr = prompt("Do number between repetitions? (y/n): ");
+            const doNumber = doNumberStr.toLowerCase() === "y";
+
+            let i = 1;
+
+            while (i <= parseFloat(times)) {
+                if (doNumber) {
+                    printOutput(i + ": " + string);
+                } else {
+                    printOutput(string);
+                }
+
+                sleep(parseFloat(interval));
+                i++;
+            }
+        }
+
+        function sleep(seconds) {
+            const milliseconds = seconds * 1000;
+            const start = new Date().getTime();
+            let current = null;
+
+            do {
+                current = new Date().getTime();
+            } while (current - start < milliseconds);
+        }
+
+        // Initial password prompt
+        while (!passwordCorrect && run) {
+            const passwordInput = prompt("Input the password to continue:");
+            if (passwordInput === password) {
+                passwordCorrect = true;
+            } else {
+                printOutput("Incorrect. Access Denied.");
+            }
+        }
+
+        // Main loop
+        while (run) {
+            // Simulate user input with prompt
+            const cmdIn = prompt("C:\\Terminal>>>");
+
+            // Handle the command
+            handleCommand(cmdIn);
+        }
+    </script>
+</body>
+</html>
